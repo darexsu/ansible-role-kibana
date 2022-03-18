@@ -32,9 +32,12 @@
 ansible-galaxy install darexsu.kibana --force
 ansible-galaxy collection install ansible.posix
 ```
-### Requirements
 
-dependencies will automatically be installed: [FirewallD](https://github.com/darexsu/ansible-role-firewalld)
+### Requirements
+collections: [ansible.posix](https://docs.ansible.com/ansible/latest/collections/ansible/posix/index.html)
+
+roles: [FirewallD](https://github.com/darexsu/ansible-role-firewalld) (will automatically be installed)
+
 
 ### Merge behaviour
 
