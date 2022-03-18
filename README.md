@@ -30,7 +30,6 @@
 
 ```
 ansible-galaxy install darexsu.kibana --force
-ansible-galaxy collection install ansible.posix
 ```
 
 ### Requirements
