@@ -1,0 +1,31 @@
+---
+- name: ensure dependencies are installed.
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: true
+  with_items: "{{ kibana_const[ansible_os_family]['dependencies'] }}"
+
+- name: add elastic.co repo
+  block:
+    - name: add elastic.co gpg key
+      ansible.builtin.apt_key:
+        url: "{{ kibana_const[ansible_os_family]['elastic']['gpg'] }}"
+        state: present
+
+    - name: add elastic.co repo
+      ansible.builtin.apt_repository:
+        repo: "{{ kibana_const[ansible_os_family]['elastic']['repo'] }}"
+        state: present
+  when: kibana.repo == "elastic"
+
+- name: install kibana
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: true
+  with_items: "{{ kibana_install['packages'] }}"
+
+- name: force systemd to reread configs
+  ansible.builtin.systemd:
+    daemon_reload: true

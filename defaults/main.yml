@@ -1,0 +1,62 @@
+---
+# Kibana
+kibana:
+  enabled: false
+  version: "8.x"
+  repo: "elastic"
+  service:
+    enabled: true
+    state: "started"
+
+# Kibana -> install
+kibana_install:
+  enabled: false
+  packages: ["kibana"]
+
+# Kibana -> config -> kibana.yml
+kibana_yml:
+  enabled: false
+  file: "kibana.yml"
+  src: "kibana_yml.j2"
+  backup: false
+  data:
+    server.host: "0.0.0.0"
+    server.publicBaseUrl: "http://0.0.0.0:5601/"
+    pid.file: /run/kibana/kibana.pid
+    logging:
+      appenders:
+        file:
+          type: file
+          fileName: /var/log/kibana/kibana.log
+          layout:
+            type: json
+      root:
+        appenders:
+          - default
+          - file
+
+# Kibana -> constants
+kibana_const:
+  Debian:
+    dependencies: [apt-transport-https, gnupg2, ca-certificates]
+    elastic:
+      repo: "deb https://artifacts.elastic.co/packages/{{ kibana.version }}/apt stable main"
+      gpg: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
+  RedHat:
+    dependencies: ["gnupg2"]
+    elastic:
+      repo: "https://artifacts.elastic.co/packages/{{ kibana.version }}/yum"
+      gpg: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
+
+# FirewallD
+firewalld:
+  enabled: false
+
+# FirewallD -> rules
+firewalld_rules:
+  kibana_port_5601:
+    enabled: true
+    zone: "public"
+    state: "enabled"
+    port: "5601/tcp"
+    permanent: true

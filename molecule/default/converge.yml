@@ -1,0 +1,63 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+
+  pre_tasks:
+    - name: Unnessessary command
+      ansible.builtin.shell:
+        cmd: "{{ lookup('env', 'ANSIBLE_COMMAND') }}"
+      when: lookup('env', 'ANSIBLE_COMMAND') | length > 0
+
+  vars:
+    merge:
+      # Kibana
+      kibana:
+        enabled: true
+        version: "8.x"
+        repo: "elastic"
+        service:
+          enabled: true
+          state: "started"
+      # Kibana -> install
+      kibana_install:
+        enabled: true
+        packages: ["kibana"]
+      # Kibana -> config -> kibana.yml
+      kibana_yml:
+        enabled: true
+        file: "kibana.yml"
+        src: "kibana_yml.j2"
+        backup: false
+        data:
+          server.host: "0.0.0.0"
+          server.publicBaseUrl: "http://0.0.0.0:5601/"
+          pid.file: /run/kibana/kibana.pid
+          logging:
+            appenders:
+              file:
+                type: file
+                fileName: /var/log/kibana/kibana.log
+                layout:
+                  type: json
+            root:
+              appenders:
+                - default
+                - file
+
+      # FirewallD
+      firewalld:
+        enabled: true
+      # FirewallD -> rules
+      firewalld_rules:
+        kibana_port_5601:
+          enabled: true
+          zone: "public"
+          state: "enabled"
+          port: "5601/tcp"
+          permanent: true
+
+  tasks:
+    - name: role darexsu kibana
+      include_role:
+        name: darexsu.kibana

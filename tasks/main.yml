@@ -1,0 +1,45 @@
+---
+- name: merge dictionaries
+  block:
+    - include_vars:
+        file: ../../darexsu.kibana/defaults/main.yml
+        name: kibana_default_vars
+
+    - name: merge default and new dictionaries
+      set_fact:
+        "{{ item.key }}": "{{ kibana_default_vars[item.key] | combine(merge[item.key], recursive=True)}}"
+      when: kibana_default_vars[item.key] is defined
+      with_dict: "{{ merge }}"
+
+    - name: combine defaults vars with merge dictionary
+      set_fact:
+        merge: "{{ kibana_default_vars | combine(merge, recursive=True)}}"
+  when: merge is defined
+
+- name: kibana role is disabled
+  meta: end_play
+  when: not kibana.enabled
+
+- name: "-> 01_Kibana_install_{{ ansible_os_family }}.yml"
+  include_tasks: "./tasks/01_Kibana_install_{{ ansible_os_family }}.yml"
+  when: kibana_install.enabled
+
+- name: gather the package facts
+  ansible.builtin.package_facts:
+    manager: auto
+
+- name: "-> 02_kibana_config.yml"
+  include_tasks: "./tasks/02_Kibana_config.yml"
+  when: ("kibana") in ansible_facts.packages
+
+- name: include role firewalld
+  include_role:
+    name: darexsu.firewalld
+  when: firewalld.enabled
+
+- name: "ensure kibana is {{ kibana['service']['state'] }}"
+  ansible.builtin.service:
+    name: kibana
+    state: "{{ kibana['service']['state'] }}"
+    enabled: "{{ kibana['service']['enabled'] }}"
+  when: ("kibana") in ansible_facts.packages

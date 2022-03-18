@@ -1,0 +1,35 @@
+---
+- name: ensure dependencies are installed.
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+    update_cache: true
+  with_items: "{{ kibana_const[ansible_os_family]['dependencies'] }}"
+
+- name: add elastic repo for redhat
+  block:
+    - name: import elastic gpg key
+      ansible.builtin.rpm_key:
+        key: "{{ kibana_const[ansible_os_family]['elastic']['gpg'] }}"
+        state: present
+
+    - name: add elasticsearch repository
+      ansible.builtin.yum_repository:
+        name: "elasticsearch"
+        description: "Elastic repository"
+        baseurl: "{{ kibana_const[ansible_os_family]['elastic']['repo'] }}"
+        gpgcheck: true
+        enabled: true
+        module_hotfixes: true
+  when: kibana.repo == "elastic"
+
+- name: install kibana
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+    update_cache: true
+  with_items: "{{ kibana_install['packages'] }}"
+
+- name: force systemd to reread configs
+  ansible.builtin.systemd:
+    daemon_reload: true
