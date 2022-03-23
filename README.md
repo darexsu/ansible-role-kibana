@@ -78,9 +78,22 @@ Your vars [host_vars]  -->  default vars [current role] --> default vars [includ
       # Kibana -> config -> kibana.yml
       kibana_yml:
         enabled: true
-        data:
-          server.host: "0.0.0.0"
-          server.publicBaseUrl: "http://0.0.0.0:5601/"
+        data: |
+          pid.file: /run/kibana/kibana.pid
+          server.host: 0.0.0.0
+          server.publicBaseUrl: http://0.0.0.0:5601/
+          elasticsearch.hosts: ["http://localhost:9200"]
+          logging:
+            appenders:
+              file:
+                type: file
+                fileName: /var/log/kibana/kibana.log
+                layout:
+                  type: json
+            root:
+              appenders:
+                - default
+                - file
 
       # FirewallD
       firewalld:
@@ -135,10 +148,11 @@ Your vars [host_vars]  -->  default vars [current role] --> default vars [includ
         file: "kibana.yml"
         src: "kibana_yml.j2"
         backup: false
-        data:
-          server.host: "0.0.0.0"
-          server.publicBaseUrl: "http://0.0.0.0:5601/"
+        data: |
           pid.file: /run/kibana/kibana.pid
+          server.host: 0.0.0.0
+          server.publicBaseUrl: http://0.0.0.0:5601/
+          elasticsearch.hosts: ["http://localhost:9200"]
           logging:
             appenders:
               file:
@@ -183,10 +197,11 @@ Your vars [host_vars]  -->  default vars [current role] --> default vars [includ
         file: "kibana.yml"
         src: "kibana_yml.j2"
         backup: false
-        data:
-          server.host: "0.0.0.0"
-          server.publicBaseUrl: "http://0.0.0.0:5601/"
+        data: |
           pid.file: /run/kibana/kibana.pid
+          server.host: 0.0.0.0
+          server.publicBaseUrl: http://0.0.0.0:5601/
+          elasticsearch.hosts: ["http://localhost:9200"]
           logging:
             appenders:
               file:
@@ -266,10 +281,11 @@ Your vars [host_vars]  -->  default vars [current role] --> default vars [includ
         file: "kibana.yml"
         src: "kibana_yml.j2"
         backup: false
-        data:
-          server.host: "0.0.0.0"
-          server.publicBaseUrl: "http://0.0.0.0:5601/"
+        data: |
           pid.file: /run/kibana/kibana.pid
+          server.host: 0.0.0.0
+          server.publicBaseUrl: http://0.0.0.0:5601/
+          elasticsearch.hosts: ["http://localhost:9200"]
           logging:
             appenders:
               file:

@@ -19,10 +19,11 @@ kibana_yml:
   file: "kibana.yml"
   src: "kibana_yml.j2"
   backup: false
-  data:
-    server.host: "0.0.0.0"
-    server.publicBaseUrl: "http://0.0.0.0:5601/"
+  data: |
     pid.file: /run/kibana/kibana.pid
+    server.host: 0.0.0.0
+    server.publicBaseUrl: http://0.0.0.0:5601/
+    elasticsearch.hosts: ["http://localhost:9200"]
     logging:
       appenders:
         file:
