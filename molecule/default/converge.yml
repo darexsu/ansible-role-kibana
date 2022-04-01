@@ -22,7 +22,6 @@
       # Kibana -> install
       kibana_install:
         enabled: true
-        packages: ["kibana"]
       # Kibana -> config -> kibana.yml
       kibana_yml:
         enabled: true

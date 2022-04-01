@@ -190,7 +190,6 @@ Your vars [host_vars]  -->  default vars [current role] --> default vars [includ
       # Kibana -> install
       kibana_install:
         enabled: true
-        packages: ["kibana"]
       # Kibana -> config -> kibana.yml
       kibana_yml:
         enabled: true
@@ -251,7 +250,6 @@ Your vars [host_vars]  -->  default vars [current role] --> default vars [includ
       # Kibana -> install
       kibana_install:
         enabled: true
-        packages: ["kibana"]
 
   tasks:
     - name: role darexsu kibana

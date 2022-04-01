@@ -11,7 +11,6 @@ kibana:
 # Kibana -> install
 kibana_install:
   enabled: false
-  packages: ["kibana"]
 
 # Kibana -> config -> kibana.yml
 kibana_yml:
@@ -40,14 +39,14 @@ kibana_yml:
 kibana_const:
   Debian:
     dependencies: [apt-transport-https, gnupg2, ca-certificates]
-    elastic:
-      repo: "deb https://artifacts.elastic.co/packages/{{ kibana.version }}/apt stable main"
-      gpg: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
+    elastic_repo: "deb https://artifacts.elastic.co/packages/{{ kibana.version }}/apt stable main"
+    elastic_gpg: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
+    packages: ["kibana"]
   RedHat:
     dependencies: ["gnupg2"]
-    elastic:
-      repo: "https://artifacts.elastic.co/packages/{{ kibana.version }}/yum"
-      gpg: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
+    elastic_repo: "https://artifacts.elastic.co/packages/{{ kibana.version }}/yum"
+    elastic_gpg: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
+    packages: ["kibana"]
 
 # FirewallD
 firewalld:
