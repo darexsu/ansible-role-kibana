@@ -178,52 +178,54 @@ Your vars [host_vars]  -->  default vars [current role] --> default vars [includ
   become: true
 
   vars:
-    merge:
-      # Kibana
-      kibana:
+    # Kibana
+    kibana:
+      enabled: true
+      version: "8.x"
+      repo: "elastic"
+      service:
         enabled: true
-        version: "8.x"
-        repo: "elastic"
-        service:
-          enabled: true
-          state: "started"
-      # Kibana -> install
-      kibana_install:
-        enabled: true
-      # Kibana -> config -> kibana.yml
-      kibana_yml:
-        enabled: true
-        file: "kibana.yml"
-        src: "kibana_yml.j2"
-        backup: false
-        data: |
-          pid.file: /run/kibana/kibana.pid
-          server.host: 0.0.0.0
-          server.publicBaseUrl: http://0.0.0.0:5601/
-          elasticsearch.hosts: ["http://localhost:9200"]
-          logging:
+        state: "started"
+    # Kibana -> install
+    kibana_install:
+      enabled: true
+    # Kibana -> config -> kibana.yml
+    kibana_yml:
+      enabled: true
+      file: "kibana.yml"
+      src: "kibana_yml.j2"
+      backup: false
+      data: |
+        pid.file: /run/kibana/kibana.pid
+        server.host: 0.0.0.0
+        server.publicBaseUrl: http://0.0.0.0:5601/
+        elasticsearch.hosts: ["http://localhost:9200"]
+        logging:
+          appenders:
+            file:
+              type: file
+              fileName: /var/log/kibana/kibana.log
+              layout:
+                type: json
+          root:
             appenders:
-              file:
-                type: file
-                fileName: /var/log/kibana/kibana.log
-                layout:
-                  type: json
-            root:
-              appenders:
-                - default
-                - file
+              - default
+              - file
 
-      # FirewallD
-      firewalld:
+    # FirewallD
+    firewalld:
+      enabled: true
+      service:
         enabled: true
-      # FirewallD -> rules
-      firewalld_rules:
-        kibana_port_5601:
-          enabled: true
-          zone: "public"
-          state: "enabled"
-          port: "5601/tcp"
-          permanent: true
+        state: "started"
+    # FirewallD -> rules
+    firewalld_rules:
+      kibana_port_5601:
+        enabled: true
+        zone: "public"
+        state: "enabled"
+        port: "5601/tcp"
+        permanent: true
 
   tasks:
     - name: role darexsu kibana
@@ -238,18 +240,17 @@ Your vars [host_vars]  -->  default vars [current role] --> default vars [includ
   become: true
 
   vars:
-    merge:
-      # Kibana
-      kibana:
+    # Kibana
+    kibana:
+      enabled: true
+      version: "8.x"
+      repo: "elastic"
+      service:
         enabled: true
-        version: "8.x"
-        repo: "elastic"
-        service:
-          enabled: true
-          state: "started"
-      # Kibana -> install
-      kibana_install:
-        enabled: true
+        state: "started"
+    # Kibana -> install
+    kibana_install:
+      enabled: true
 
   tasks:
     - name: role darexsu kibana
@@ -264,38 +265,37 @@ Your vars [host_vars]  -->  default vars [current role] --> default vars [includ
   become: true
 
   vars:
-    merge:
-      # Kibana
-      kibana:
+    # Kibana
+    kibana:
+      enabled: true
+      version: "8.x"
+      repo: "elastic"
+      service:
         enabled: true
-        version: "8.x"
-        repo: "elastic"
-        service:
-          enabled: true
-          state: "started"
-      # Kibana -> config -> kibana.yml
-      kibana_yml:
-        enabled: true
-        file: "kibana.yml"
-        src: "kibana_yml.j2"
-        backup: false
-        data: |
-          pid.file: /run/kibana/kibana.pid
-          server.host: 0.0.0.0
-          server.publicBaseUrl: http://0.0.0.0:5601/
-          elasticsearch.hosts: ["http://localhost:9200"]
-          logging:
+        state: "started"
+    # Kibana -> config -> kibana.yml
+    kibana_yml:
+      enabled: true
+      file: "kibana.yml"
+      src: "kibana_yml.j2"
+      backup: false
+      data: |
+        pid.file: /run/kibana/kibana.pid
+        server.host: 0.0.0.0
+        server.publicBaseUrl: http://0.0.0.0:5601/
+        elasticsearch.hosts: ["http://localhost:9200"]
+        logging:
+          appenders:
+            file:
+              type: file
+              fileName: /var/log/kibana/kibana.log
+              layout:
+                type: json
+          root:
             appenders:
-              file:
-                type: file
-                fileName: /var/log/kibana/kibana.log
-                layout:
-                  type: json
-            root:
-              appenders:
-                - default
-                - file
-
+              - default
+              - file
+  
   tasks:
     - name: role darexsu kibana
       include_role:
